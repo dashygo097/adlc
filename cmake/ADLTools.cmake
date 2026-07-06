@@ -35,12 +35,11 @@ function(add_adl_tool tool_name)
 
   llvm_update_compile_flags(${tool_name})
 
-  if(ADL_TOOL_LINK_LIBS)
-    target_link_libraries(${tool_name}
-      PRIVATE
-      ${ADL_TOOL_LINK_LIBS}
-    )
-  endif()
+  target_link_libraries(${tool_name}
+    PRIVATE
+    ADLInitAll
+    ${ADL_TOOL_LINK_LIBS}
+  )
 
   set_target_properties(${tool_name} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -72,7 +71,6 @@ function(add_adl_opt_tool tool_name)
 
     LINK_LIBS
     ${mlir_opt_libs}
-    ADLISADialect
     ${ADL_OPT_TOOL_LINK_LIBS}
   )
 endfunction()
