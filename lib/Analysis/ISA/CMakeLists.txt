@@ -1,4 +1,5 @@
 add_mlir_library(ADLISAAnalysis
+  InstructionInfo.cpp
   DumpInstInfo.cpp
 
   ADDITIONAL_HEADER_DIRS

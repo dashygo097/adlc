@@ -1,0 +1,14 @@
+@LIT_SITE_CFG_IN_HEADER@
+
+import sys
+import lit.llvm
+
+config.adl_src_root = "@CMAKE_SOURCE_DIR@"
+config.adl_obj_root = "@CMAKE_BINARY_DIR@"
+config.adl_tools_dir = "@CMAKE_BINARY_DIR@/bin"
+config.llvm_tools_dir = "@LLVM_TOOLS_BINARY_DIR@"
+
+# Initialize LLVM lit helpers before loading lit.cfg.py.
+lit.llvm.initialize(lit_config, config)
+
+lit_config.load_config(config, "@CMAKE_CURRENT_SOURCE_DIR@/lit.cfg.py")

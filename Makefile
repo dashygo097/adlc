@@ -51,6 +51,11 @@ clean:
 	@echo "==> Cleaning build directory..."
 	@rm -rf $(BUILD_DIR)
 
+# Run tests
+test:
+	@echo "==> Running tests..."
+	@cd $(BUILD_DIR) && ninja check-$(TEST_TARGET)
+
 # Help message
 help:
 	@echo "Available targets:"
@@ -59,6 +64,7 @@ help:
 	@echo "  build            - Build the project"
 	@echo "  reconfigure      - Force CMake reconfiguration"
 	@echo "  clean            - Remove build directory"
+	@echo "  test             - Run tests"
 	@echo "  help             - Show this help message"
 	@echo ""
 	@echo "Variables:"
