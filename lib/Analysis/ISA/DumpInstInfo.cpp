@@ -13,6 +13,10 @@
 using namespace mlir;
 
 namespace adl::isa {
+
+#define GEN_PASS_DEF_DUMPINSTINFO
+#include "adl/Analysis/ISA/Passes.h.inc"
+
 namespace {
 
 static void printList(llvm::StringRef label,
@@ -34,16 +38,8 @@ static void printList(llvm::StringRef label,
 }
 
 struct DumpInstInfoPass final
-    : public PassWrapper<DumpInstInfoPass, OperationPass<ModuleOp>> {
-  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(DumpInstInfoPass)
-
-  [[nodiscard]] auto getArgument() const -> StringRef final {
-    return "adl-dump-inst-info";
-  }
-
-  [[nodiscard]] auto getDescription() const -> StringRef final {
-    return "Dump inferred instruction information from the ADL ISA dialect";
-  }
+    : public impl::DumpInstInfoBase<DumpInstInfoPass> {
+  using Base::Base;
 
   void runOnOperation() final {
     ModuleOp module = getOperation();
@@ -68,7 +64,5 @@ struct DumpInstInfoPass final
 auto createDumpInstInfoPass() -> std::unique_ptr<Pass> {
   return std::make_unique<DumpInstInfoPass>();
 }
-
-void registerISAAnalysisPasses() { PassRegistration<DumpInstInfoPass>(); }
 
 } // namespace adl::isa

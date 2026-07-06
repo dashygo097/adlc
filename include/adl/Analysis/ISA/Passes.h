@@ -3,17 +3,19 @@
 #ifndef ADL_ANALYSIS_ISA_PASSES_H
 #define ADL_ANALYSIS_ISA_PASSES_H
 
-#include <memory>
+#include "mlir/Pass/Pass.h"
 
-namespace mlir {
-class Pass;
-} // namespace mlir
+#include <memory>
 
 namespace adl::isa {
 
-std::unique_ptr<mlir::Pass> createDumpInstInfoPass();
+#define GEN_PASS_DECL
+#include "adl/Analysis/ISA/Passes.h.inc"
 
-void registerISAAnalysisPasses();
+auto createDumpInstInfoPass() -> std::unique_ptr<mlir::Pass>;
+
+#define GEN_PASS_REGISTRATION
+#include "adl/Analysis/ISA/Passes.h.inc"
 
 } // namespace adl::isa
 
