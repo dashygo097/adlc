@@ -1,0 +1,10 @@
+.DS_Store
+.cache/
+.profile/
+.vscode/
+.Trash-*/
+
+.venv/
+__pycache__/
+
+build/

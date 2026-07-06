@@ -1,0 +1,4 @@
+Checks: >
+  google-*,
+  modernize-*
+HeaderFilterRegex: "^(?!.*llvm-project).*"
