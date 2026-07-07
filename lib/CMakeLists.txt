@@ -10,8 +10,10 @@ add_mlir_library(ADLInitAll
 
   LINK_LIBS PUBLIC
   ADLISADialect
+  ADLProcDialect
   ADLISAAnalysis
   ADLISATransforms
+  ADLProcTransforms
   MLIRIR
   MLIRPass
   MLIRSupport
