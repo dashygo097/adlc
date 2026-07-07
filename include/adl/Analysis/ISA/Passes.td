@@ -8,8 +8,7 @@ def DumpInstInfo : Pass<"adl-dump-inst-info", "mlir::ModuleOp"> {
 
   let description = [{
     This pass walks isa.inst operations and prints normalized instruction
-    metadata inferred from the ADL ISA dialect. The output is intended for
-    debugging and regression testing of the ISA analysis layer.
+    metadata inferred from the ADL ISA dialect.
   }];
 
   let constructor = "adl::isa::createDumpInstInfoPass()";
@@ -24,8 +23,7 @@ def DumpDecoderInfo : Pass<"adl-dump-decoder-info", "mlir::ModuleOp"> {
 
   let description = [{
     This pass walks isa.inst operations and prints decoder metadata derived
-    from the instruction encoding attribute, including match mask, match value,
-    and field extraction ranges.
+    from the instruction encoding attribute.
   }];
 
   let constructor = "adl::isa::createDumpDecoderInfoPass()";
@@ -44,6 +42,22 @@ def DumpDecoderTable : Pass<"adl-dump-decoder-table", "mlir::ModuleOp"> {
   }];
 
   let constructor = "adl::isa::createDumpDecoderTablePass()";
+
+  let dependentDialects = [
+    "adl::isa::ISADialect"
+  ];
+}
+
+def VerifyDecoderTable : Pass<"adl-verify-decoder-table", "mlir::ModuleOp"> {
+  let summary = "Verify ADL ISA decoder table validity";
+
+  let description = [{
+    This pass builds a module-level decoder table from isa.inst operations and
+    fails if any instruction encoding is invalid or if any two instruction
+    encodings overlap.
+  }];
+
+  let constructor = "adl::isa::createVerifyDecoderTablePass()";
 
   let dependentDialects = [
     "adl::isa::ISADialect"
