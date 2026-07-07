@@ -14,6 +14,7 @@ namespace adl::isa {
 
 auto createDumpInstInfoPass() -> std::unique_ptr<mlir::Pass>;
 auto createDumpDecoderInfoPass() -> std::unique_ptr<mlir::Pass>;
+auto createDumpDecoderTablePass() -> std::unique_ptr<mlir::Pass>;
 
 #define GEN_PASS_REGISTRATION
 #include "adl/Analysis/ISA/Passes.h.inc"

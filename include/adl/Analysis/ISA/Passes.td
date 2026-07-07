@@ -35,4 +35,19 @@ def DumpDecoderInfo : Pass<"adl-dump-decoder-info", "mlir::ModuleOp"> {
   ];
 }
 
+def DumpDecoderTable : Pass<"adl-dump-decoder-table", "mlir::ModuleOp"> {
+  let summary = "Dump ADL ISA decoder table information";
+
+  let description = [{
+    This pass builds a module-level decoder table from isa.inst operations,
+    prints decoder entries, and reports overlapping instruction encodings.
+  }];
+
+  let constructor = "adl::isa::createDumpDecoderTablePass()";
+
+  let dependentDialects = [
+    "adl::isa::ISADialect"
+  ];
+}
+
 #endif
