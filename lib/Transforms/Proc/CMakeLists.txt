@@ -8,6 +8,7 @@ add_mlir_library(ADLProcTransforms
   ADLProcTransformsPassIncGen
 
   LINK_LIBS PUBLIC
+  ADLISAAnalysis
   ADLISADialect
   ADLProcDialect
   MLIRIR

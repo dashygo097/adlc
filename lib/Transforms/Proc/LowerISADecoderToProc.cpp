@@ -1,5 +1,6 @@
 #include "adl/Transforms/Proc/Passes.h"
 
+#include "adl/Analysis/ISA/InstructionInfo.h"
 #include "adl/Dialect/ISA/IR/ISAOps.h"
 #include "adl/Dialect/Proc/IR/ProcOps.h"
 
@@ -9,6 +10,7 @@
 #include "mlir/Pass/Pass.h"
 
 #include <memory>
+#include <string>
 
 using namespace mlir;
 
@@ -55,6 +57,42 @@ auto findISADecoderTable(ModuleOp module) -> adl::isa::DecoderTableOp {
   return table;
 }
 
+auto findISAInstruction(ModuleOp module, llvm::StringRef name)
+    -> adl::isa::InstOp {
+  adl::isa::InstOp result;
+
+  module.walk([&](adl::isa::InstOp inst) -> WalkResult {
+    if (inst.getSymName() == name) {
+      result = inst;
+      return WalkResult::interrupt();
+    }
+
+    return WalkResult::advance();
+  });
+
+  return result;
+}
+
+auto buildStringArray(OpBuilder &builder,
+                      const llvm::SmallVectorImpl<std::string> &values)
+    -> ArrayAttr {
+  llvm::SmallVector<Attribute, 8> attrs;
+
+  for (const std::string &value : values) {
+    attrs.push_back(builder.getStringAttr(value));
+  }
+
+  return builder.getArrayAttr(attrs);
+}
+
+auto emitMissingInstructionError(ModuleOp module,
+                                 adl::isa::DecoderEntryOp entry)
+    -> LogicalResult {
+  module.emitError() << "isa.decoder_entry references missing instruction '"
+                     << entry.getInst() << "'";
+  return failure();
+}
+
 struct LowerISADecoderToProcPass final
     : public impl::LowerISADecoderToProcBase<LowerISADecoderToProcPass> {
   using Base::Base;
@@ -92,9 +130,24 @@ struct LowerISADecoderToProcPass final
     builder.setInsertionPointToEnd(block);
 
     for (adl::isa::DecoderEntryOp isaEntry : isaEntries) {
-      DecodeEntryOp::create(builder, module.getLoc(), isaEntry.getInst(),
-                            isaEntry.getWidth(), isaEntry.getMask(),
-                            isaEntry.getValue(), isaEntry.getFields());
+      adl::isa::InstOp inst = findISAInstruction(module, isaEntry.getInst());
+      if (!inst) {
+        if (failed(emitMissingInstructionError(module, isaEntry))) {
+          signalPassFailure();
+          return;
+        }
+      }
+
+      adl::isa::InstructionInfo info = adl::isa::analyzeInstruction(inst);
+
+      DecodeEntryOp::create(
+          builder, module.getLoc(), isaEntry.getInst(), isaEntry.getWidth(),
+          isaEntry.getMask(), isaEntry.getValue(), isaEntry.getFields(),
+          buildStringArray(builder, info.reads),
+          buildStringArray(builder, info.writes),
+          buildStringArray(builder, info.immediates),
+          buildStringArray(builder, info.ops), info.getClassName(),
+          info.getMemoryName(), info.hasControlFlow);
     }
   }
 };

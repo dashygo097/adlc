@@ -1,18 +1,31 @@
 // RUN: adl-opt %s --adl-materialize-decoder-table --adl-lower-isa-decoder-to-proc | FileCheck %s
 
-// CHECK: isa.decoder_table {width = 32 : i64}
-// CHECK: isa.decoder_entry @LW
-// CHECK: isa.decoder_entry @SW
-
 // CHECK: proc.decoder attributes {width = 32 : i64} {
+
 // CHECK: proc.decode_entry @LW
+// CHECK-SAME: control_flow = false
+// CHECK-SAME: immediates = ["imm"]
+// CHECK-SAME: inst_class = "memory"
 // CHECK-SAME: mask = "0x0000707F"
+// CHECK-SAME: memory = "read"
+// CHECK-SAME: ops = ["imm", "add", "load"]
+// CHECK-SAME: reads = ["rs1"]
 // CHECK-SAME: value = "0x00002003"
 // CHECK-SAME: width = 32 : i64
+// CHECK-SAME: writes = ["rd"]
+
 // CHECK: proc.decode_entry @SW
+// CHECK-SAME: control_flow = false
+// CHECK-SAME: immediates = ["imm"]
+// CHECK-SAME: inst_class = "memory"
 // CHECK-SAME: mask = "0x0000707F"
+// CHECK-SAME: memory = "write"
+// CHECK-SAME: ops = ["imm", "add", "store"]
+// CHECK-SAME: reads = ["rs1", "rs2"]
 // CHECK-SAME: value = "0x00002023"
 // CHECK-SAME: width = 32 : i64
+// CHECK-SAME: writes = []
+
 // CHECK: }
 
 module {

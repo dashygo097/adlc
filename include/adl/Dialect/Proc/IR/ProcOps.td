@@ -39,8 +39,8 @@ def Proc_DecodeEntryOp : Proc_Op<"decode_entry"> {
 
   let description = [{
     proc.decode_entry references an ISA instruction and records the metadata
-    needed by a processor decoder: match mask, match value, and field
-    extraction descriptors.
+    needed by a processor decoder: match mask, match value, field extraction
+    descriptors, and high-level semantic control metadata.
   }];
 
   let arguments = (ins
@@ -48,7 +48,14 @@ def Proc_DecodeEntryOp : Proc_Op<"decode_entry"> {
     I64Attr:$width,
     StrAttr:$mask,
     StrAttr:$value,
-    ArrayAttr:$fields
+    ArrayAttr:$fields,
+    ArrayAttr:$reads,
+    ArrayAttr:$writes,
+    ArrayAttr:$immediates,
+    ArrayAttr:$ops,
+    StrAttr:$inst_class,
+    StrAttr:$memory,
+    BoolAttr:$control_flow
   );
 
   let assemblyFormat = "$inst attr-dict";
