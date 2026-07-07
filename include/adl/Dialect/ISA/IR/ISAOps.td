@@ -15,7 +15,8 @@ def ISADialect : Dialect {
   }];
 }
 
-class ISA_Op<string mnemonic, list<Trait> traits = []> : Op<ISADialect, mnemonic, traits>;
+class ISA_Op<string mnemonic, list<Trait> traits = []>
+    : Op<ISADialect, mnemonic, traits>;
 
 def ISA_InstOp : ISA_Op<"inst", [NoTerminator]> {
   let summary = "Instruction semantic container";
@@ -53,7 +54,12 @@ def ISA_WriteRegOp : ISA_Op<"write_reg"> {
 def ISA_ImmOp : ISA_Op<"imm", [Pure]> {
   let summary = "Read a decoded immediate field";
 
-  let arguments = (ins StrAttr:$name, I64Attr:$width, OptionalAttr<BoolAttr>:$is_signed);
+  let arguments = (ins
+    StrAttr:$name,
+    I64Attr:$width,
+    OptionalAttr<BoolAttr>:$is_signed
+  );
+
   let results = (outs AnyInteger:$value);
 
   let hasVerifier = 1;
@@ -69,13 +75,19 @@ def ISA_AddOp : ISA_Op<"add", [Pure]> {
 
   let hasVerifier = 1;
 
-  let assemblyFormat = "$lhs `,` $rhs attr-dict `:` type($lhs) `,` type($rhs) `->` type($result)";
+  let assemblyFormat =
+      "$lhs `,` $rhs attr-dict `:` type($lhs) `,` type($rhs) `->` type($result)";
 }
 
 def ISA_LoadOp : ISA_Op<"load"> {
   let summary = "ISA-level memory load effect";
 
-  let arguments = (ins AnyInteger:$addr, I64Attr:$bytes, OptionalAttr<BoolAttr>:$is_signed);
+  let arguments = (ins
+    AnyInteger:$addr,
+    I64Attr:$bytes,
+    OptionalAttr<BoolAttr>:$is_signed
+  );
+
   let results = (outs AnyInteger:$result);
 
   let hasVerifier = 1;
@@ -97,6 +109,39 @@ def ISA_RetireOp : ISA_Op<"retire"> {
   let summary = "Mark normal architectural retirement";
 
   let assemblyFormat = "attr-dict";
+}
+
+def ISA_DecoderTableOp : ISA_Op<"decoder_table"> {
+  let summary = "Materialized ISA decoder table metadata";
+
+  let description = [{
+    isa.decoder_table is derived metadata generated from isa.inst encoding
+    attributes. It is intended to be consumed by later decoder-generation
+    passes, not written by hand.
+  }];
+
+  let arguments = (ins I64Attr:$width);
+
+  let assemblyFormat = "attr-dict";
+}
+
+def ISA_DecoderEntryOp : ISA_Op<"decoder_entry"> {
+  let summary = "Materialized decoder entry for one instruction";
+
+  let description = [{
+    isa.decoder_entry records the decoder match metadata for one instruction.
+    It references the instruction symbol instead of defining a new symbol.
+  }];
+
+  let arguments = (ins
+    FlatSymbolRefAttr:$inst,
+    I64Attr:$width,
+    StrAttr:$mask,
+    StrAttr:$value,
+    ArrayAttr:$fields
+  );
+
+  let assemblyFormat = "$inst attr-dict";
 }
 
 #endif

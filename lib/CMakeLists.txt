@@ -1,5 +1,6 @@
 add_subdirectory(Dialect)
 add_subdirectory(Analysis)
+add_subdirectory(Transforms)
 
 add_mlir_library(ADLInitAll
   InitAll.cpp
@@ -10,6 +11,7 @@ add_mlir_library(ADLInitAll
   LINK_LIBS PUBLIC
   ADLISADialect
   ADLISAAnalysis
+  ADLISATransforms
   MLIRIR
   MLIRPass
   MLIRSupport

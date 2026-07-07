@@ -2,6 +2,7 @@
 
 #include "adl/Analysis/ISA/Passes.h"
 #include "adl/Dialect/ISA/IR/ISADialect.h"
+#include "adl/Transforms/ISA/Passes.h"
 
 #include "mlir/IR/DialectRegistry.h"
 
@@ -11,6 +12,9 @@ auto registerAllDialects(mlir::DialectRegistry &registry) -> void {
   registry.insert<adl::isa::ISADialect>();
 }
 
-auto registerAllPasses() -> void { adl::isa::registerISAAnalysisPasses(); }
+auto registerAllPasses() -> void {
+  adl::isa::registerISAAnalysisPasses();
+  adl::isa::registerISATransformsPasses();
+}
 
 } // namespace adl
