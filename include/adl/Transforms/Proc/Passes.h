@@ -13,6 +13,7 @@ namespace adl::proc {
 #include "adl/Transforms/Proc/Passes.h.inc"
 
 auto createLowerISADecoderToProcPass() -> std::unique_ptr<mlir::Pass>;
+auto createExpandProcDecoderPass() -> std::unique_ptr<mlir::Pass>;
 
 #define GEN_PASS_REGISTRATION
 #include "adl/Transforms/Proc/Passes.h.inc"

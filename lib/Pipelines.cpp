@@ -16,6 +16,7 @@ auto buildProcDecoderPipeline(OpPassManager &pm) -> void {
   pm.addPass(adl::isa::createVerifyDecoderTablePass());
   pm.addPass(adl::isa::createMaterializeDecoderTablePass());
   pm.addPass(adl::proc::createLowerISADecoderToProcPass());
+  pm.addPass(adl::proc::createExpandProcDecoderPass());
 }
 
 } // namespace
@@ -23,8 +24,8 @@ auto buildProcDecoderPipeline(OpPassManager &pm) -> void {
 auto registerAllPipelines() -> void {
   static PassPipelineRegistration<> buildProcDecoderPipelineRegistration(
       "adl-build-proc-decoder",
-      "Verify ISA encodings, materialize ISA decoder metadata, and lower it "
-      "to processor-level decoder metadata.",
+      "Verify ISA encodings, materialize decoder metadata, lower it to proc, "
+      "and expand it into executable proc decoder IR.",
       [](OpPassManager &pm) -> void { buildProcDecoderPipeline(pm); });
 }
 

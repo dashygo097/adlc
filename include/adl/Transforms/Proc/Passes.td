@@ -21,4 +21,20 @@ def LowerISADecoderToProc
   ];
 }
 
+def ExpandProcDecoder
+    : Pass<"adl-expand-proc-decoder", "mlir::ModuleOp"> {
+  let summary = "Expand proc decoder metadata into executable decode IR";
+
+  let description = [{
+    This pass consumes proc.decode_entry metadata and emits proc.match and
+    proc.extract_field operations inside proc.decoder.
+  }];
+
+  let constructor = "adl::proc::createExpandProcDecoderPass()";
+
+  let dependentDialects = [
+    "adl::proc::ProcDialect"
+  ];
+}
+
 #endif
