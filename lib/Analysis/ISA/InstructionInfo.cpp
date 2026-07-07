@@ -78,6 +78,12 @@ auto analyzeInstruction(InstOp inst) -> InstructionInfo {
       return;
     }
 
+    if (auto imm = dyn_cast<ImmOp>(op)) {
+      info.immediates.push_back(imm.getName().str());
+      info.ops.push_back("imm");
+      return;
+    }
+
     if (mlir::isa<AddOp>(op)) {
       info.ops.push_back("add");
       return;

@@ -7,10 +7,10 @@
 
 namespace adl {
 
-void registerAllDialects(mlir::DialectRegistry &registry) {
+auto registerAllDialects(mlir::DialectRegistry &registry) -> void {
   registry.insert<adl::isa::ISADialect>();
 }
 
-void registerAllPasses() { adl::isa::registerISAAnalysisPasses(); }
+auto registerAllPasses() -> void { adl::isa::registerISAAnalysisPasses(); }
 
 } // namespace adl

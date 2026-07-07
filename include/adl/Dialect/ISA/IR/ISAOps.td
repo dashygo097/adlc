@@ -19,6 +19,11 @@ class ISA_Op<string mnemonic, list<Trait> traits = []> : Op<ISADialect, mnemonic
 
 def ISA_InstOp : ISA_Op<"inst", [NoTerminator]> {
   let summary = "Instruction semantic container";
+  let description = [{
+    isa.inst represents one architectural instruction. The operation owns a
+    body region containing normalized ISA effects such as register reads,
+    register writes, arithmetic, memory accesses, branches, traps, and retire.
+  }];
 
   let arguments = (ins SymbolNameAttr:$sym_name);
   let regions = (region AnyRegion:$body);
@@ -43,6 +48,17 @@ def ISA_WriteRegOp : ISA_Op<"write_reg"> {
   let arguments = (ins StrAttr:$name, AnyType:$value);
 
   let assemblyFormat = "$name `,` $value attr-dict `:` type($value)";
+}
+
+def ISA_ImmOp : ISA_Op<"imm", [Pure]> {
+  let summary = "Read a decoded immediate field";
+
+  let arguments = (ins StrAttr:$name, I64Attr:$width, OptionalAttr<BoolAttr>:$is_signed);
+  let results = (outs AnyInteger:$value);
+
+  let hasVerifier = 1;
+
+  let assemblyFormat = "$name attr-dict `:` type($value)";
 }
 
 def ISA_AddOp : ISA_Op<"add", [Pure]> {

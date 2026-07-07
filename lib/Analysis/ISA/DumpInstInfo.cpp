@@ -19,9 +19,10 @@ namespace adl::isa {
 
 namespace {
 
-static void printList(llvm::StringRef label,
-                      const llvm::SmallVectorImpl<std::string> &values) {
+auto printList(llvm::StringRef label,
+               const llvm::SmallVectorImpl<std::string> &values) -> void {
   llvm::outs() << "  " << label << ": ";
+
   if (values.empty()) {
     llvm::outs() << "none\n";
     return;
@@ -31,6 +32,7 @@ static void printList(llvm::StringRef label,
     if (i != 0) {
       llvm::outs() << ", ";
     }
+
     llvm::outs() << values[i];
   }
 
@@ -41,7 +43,7 @@ struct DumpInstInfoPass final
     : public impl::DumpInstInfoBase<DumpInstInfoPass> {
   using Base::Base;
 
-  void runOnOperation() final {
+  auto runOnOperation() -> void final {
     ModuleOp module = getOperation();
 
     module.walk([&](InstOp inst) -> void {
@@ -50,6 +52,7 @@ struct DumpInstInfoPass final
       llvm::outs() << info.name << ":\n";
       printList("reads", info.reads);
       printList("writes", info.writes);
+      printList("immediates", info.immediates);
       printList("ops", info.ops);
       llvm::outs() << "  class: " << info.getClassName() << "\n";
       llvm::outs() << "  memory: " << info.getMemoryName() << "\n";

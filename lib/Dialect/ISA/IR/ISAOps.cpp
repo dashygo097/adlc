@@ -11,14 +11,26 @@ using namespace adl::isa;
 #define GET_OP_CLASSES
 #include "adl/Dialect/ISA/IR/ISAOps.cpp.inc"
 
+auto ImmOp::verify() -> LogicalResult {
+  if (getWidth() == 0) {
+    return emitOpError("requires non-zero immediate width");
+  }
+
+  auto resultType = cast<IntegerType>(getValue().getType());
+  if (getWidth() > static_cast<uint64_t>(resultType.getWidth())) {
+    return emitOpError("requires immediate width to fit in result type");
+  }
+
+  return success();
+}
+
 auto AddOp::verify() -> LogicalResult {
   if (getLhs().getType() != getRhs().getType()) {
     return emitOpError("requires lhs and rhs to have the same type");
   }
 
   if (getResult().getType() != getLhs().getType()) {
-    return emitOpError(
-        "requires result type to matcLogicalResulth operand types");
+    return emitOpError("requires result type to match operand types");
   }
 
   return success();

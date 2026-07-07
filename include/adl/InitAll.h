@@ -9,8 +9,8 @@ class DialectRegistry;
 
 namespace adl {
 
-void registerAllDialects(mlir::DialectRegistry &registry);
-void registerAllPasses();
+auto registerAllDialects(mlir::DialectRegistry &registry) -> void;
+auto registerAllPasses() -> void;
 
 } // namespace adl
 

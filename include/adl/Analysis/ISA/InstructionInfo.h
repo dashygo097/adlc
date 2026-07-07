@@ -23,6 +23,7 @@ struct InstructionInfo {
   std::string name;
   llvm::SmallVector<std::string, 4> reads;
   llvm::SmallVector<std::string, 4> writes;
+  llvm::SmallVector<std::string, 4> immediates;
   llvm::SmallVector<std::string, 4> ops;
   bool hasMemoryRead = false;
   bool hasMemoryWrite = false;
