@@ -6,8 +6,28 @@ using namespace mlir;
 
 namespace adl::isa {
 
+auto InstructionInfo::hasMemory() const -> bool {
+  return hasMemoryRead || hasMemoryWrite;
+}
+
+auto InstructionInfo::getMemoryName() const -> llvm::StringRef {
+  if (hasMemoryRead && hasMemoryWrite) {
+    return "read, write";
+  }
+
+  if (hasMemoryRead) {
+    return "read";
+  }
+
+  if (hasMemoryWrite) {
+    return "write";
+  }
+
+  return "none";
+}
+
 auto InstructionInfo::getClass() const -> InstructionClass {
-  if (hasMemory) {
+  if (hasMemory()) {
     return InstructionClass::Memory;
   }
 
@@ -60,6 +80,18 @@ auto analyzeInstruction(InstOp inst) -> InstructionInfo {
 
     if (mlir::isa<AddOp>(op)) {
       info.ops.push_back("add");
+      return;
+    }
+
+    if (mlir::isa<LoadOp>(op)) {
+      info.ops.push_back("load");
+      info.hasMemoryRead = true;
+      return;
+    }
+
+    if (mlir::isa<StoreOp>(op)) {
+      info.ops.push_back("store");
+      info.hasMemoryWrite = true;
       return;
     }
   });

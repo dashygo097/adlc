@@ -24,9 +24,12 @@ struct InstructionInfo {
   llvm::SmallVector<std::string, 4> reads;
   llvm::SmallVector<std::string, 4> writes;
   llvm::SmallVector<std::string, 4> ops;
-  bool hasMemory = false;
+  bool hasMemoryRead = false;
+  bool hasMemoryWrite = false;
   bool hasControlFlow = false;
 
+  [[nodiscard]] auto hasMemory() const -> bool;
+  [[nodiscard]] auto getMemoryName() const -> llvm::StringRef;
   [[nodiscard]] auto getClass() const -> InstructionClass;
   [[nodiscard]] auto getClassName() const -> llvm::StringRef;
 };

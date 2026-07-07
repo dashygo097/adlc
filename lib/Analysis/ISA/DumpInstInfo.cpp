@@ -52,7 +52,7 @@ struct DumpInstInfoPass final
       printList("writes", info.writes);
       printList("ops", info.ops);
       llvm::outs() << "  class: " << info.getClassName() << "\n";
-      llvm::outs() << "  memory: " << (info.hasMemory ? "yes" : "none") << "\n";
+      llvm::outs() << "  memory: " << info.getMemoryName() << "\n";
       llvm::outs() << "  control-flow: "
                    << (info.hasControlFlow ? "yes" : "none") << "\n";
     });
