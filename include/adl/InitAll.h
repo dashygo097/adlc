@@ -5,12 +5,13 @@
 
 namespace mlir {
 class DialectRegistry;
-} // namespace mlir
+}
 
 namespace adl {
 
 auto registerAllDialects(mlir::DialectRegistry &registry) -> void;
 auto registerAllPasses() -> void;
+auto registerAllPipelines() -> void;
 
 } // namespace adl
 

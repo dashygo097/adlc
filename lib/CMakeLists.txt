@@ -4,6 +4,7 @@ add_subdirectory(Transforms)
 
 add_mlir_library(ADLInitAll
   InitAll.cpp
+  Pipelines.cpp
 
   ADDITIONAL_HEADER_DIRS
   ${PROJECT_SOURCE_DIR}/include/adl

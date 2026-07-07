@@ -3,6 +3,7 @@
 #include "adl/Analysis/ISA/Passes.h"
 #include "adl/Dialect/ISA/IR/ISADialect.h"
 #include "adl/Dialect/Proc/IR/ProcDialect.h"
+#include "adl/Pipelines.h"
 #include "adl/Transforms/ISA/Passes.h"
 #include "adl/Transforms/Proc/Passes.h"
 
@@ -18,6 +19,7 @@ auto registerAllPasses() -> void {
   adl::isa::registerISAAnalysisPasses();
   adl::isa::registerISATransformsPasses();
   adl::proc::registerProcTransformsPasses();
+  adl::registerAllPipelines();
 }
 
 } // namespace adl
