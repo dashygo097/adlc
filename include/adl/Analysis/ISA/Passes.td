@@ -19,4 +19,20 @@ def DumpInstInfo : Pass<"adl-dump-inst-info", "mlir::ModuleOp"> {
   ];
 }
 
+def DumpDecoderInfo : Pass<"adl-dump-decoder-info", "mlir::ModuleOp"> {
+  let summary = "Dump inferred ADL ISA decoder information";
+
+  let description = [{
+    This pass walks isa.inst operations and prints decoder metadata derived
+    from the instruction encoding attribute, including match mask, match value,
+    and field extraction ranges.
+  }];
+
+  let constructor = "adl::isa::createDumpDecoderInfoPass()";
+
+  let dependentDialects = [
+    "adl::isa::ISADialect"
+  ];
+}
+
 #endif

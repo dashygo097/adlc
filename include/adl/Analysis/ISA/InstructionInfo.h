@@ -3,11 +3,13 @@
 #ifndef ADL_ANALYSIS_ISA_INSTRUCTIONINFO_H
 #define ADL_ANALYSIS_ISA_INSTRUCTIONINFO_H
 
+#include "adl/Analysis/ISA/Encoding.h"
 #include "adl/Dialect/ISA/IR/ISAOps.h"
 
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringRef.h"
 
+#include <optional>
 #include <string>
 
 namespace adl::isa {
@@ -21,6 +23,7 @@ enum class InstructionClass {
 
 struct InstructionInfo {
   std::string name;
+  std::optional<InstructionEncoding> encoding;
   llvm::SmallVector<std::string, 4> reads;
   llvm::SmallVector<std::string, 4> writes;
   llvm::SmallVector<std::string, 4> immediates;

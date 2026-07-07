@@ -39,6 +39,30 @@ auto printList(llvm::StringRef label,
   llvm::outs() << "\n";
 }
 
+auto printEncoding(const std::optional<InstructionEncoding> &encoding) -> void {
+  if (!encoding.has_value()) {
+    llvm::outs() << "  encoding: none\n";
+    return;
+  }
+
+  if (!encoding->valid) {
+    llvm::outs() << "  encoding: invalid\n";
+    llvm::outs() << "  encoding-error: " << encoding->error << "\n";
+    return;
+  }
+
+  llvm::outs() << "  encoding: " << encoding->str() << "\n";
+  llvm::outs() << "  encoding-width: ";
+
+  if (encoding->hasUnknownWidth()) {
+    llvm::outs() << "unknown";
+  } else {
+    llvm::outs() << encoding->knownWidth();
+  }
+
+  llvm::outs() << "\n";
+}
+
 struct DumpInstInfoPass final
     : public impl::DumpInstInfoBase<DumpInstInfoPass> {
   using Base::Base;
@@ -50,6 +74,7 @@ struct DumpInstInfoPass final
       InstructionInfo info = analyzeInstruction(inst);
 
       llvm::outs() << info.name << ":\n";
+      printEncoding(info.encoding);
       printList("reads", info.reads);
       printList("writes", info.writes);
       printList("immediates", info.immediates);

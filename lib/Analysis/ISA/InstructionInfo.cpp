@@ -1,5 +1,6 @@
 #include "adl/Analysis/ISA/InstructionInfo.h"
 
+#include "mlir/IR/Attributes.h"
 #include "mlir/IR/Operation.h"
 
 using namespace mlir;
@@ -62,6 +63,10 @@ auto InstructionInfo::getClassName() const -> llvm::StringRef {
 auto analyzeInstruction(InstOp inst) -> InstructionInfo {
   InstructionInfo info;
   info.name = inst.getSymName().str();
+
+  if (auto encodingAttr = inst->getAttrOfType<StringAttr>("encoding")) {
+    info.encoding = parseEncoding(encodingAttr.getValue());
+  }
 
   inst->walk([&](Operation *op) -> void {
     if (op == inst.getOperation()) {
